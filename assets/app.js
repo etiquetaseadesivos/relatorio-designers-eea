@@ -12,14 +12,23 @@ const tempoMedioEl = document.getElementById("tempoMedio");
 const performanceListEl = document.getElementById("performanceList");
 
 async function fetchDashboardData() {
+  console.log("Buscando API:", API_URL);
+
   const response = await fetch(API_URL, { cache: "no-store" });
-  const result = await response.json();
+  console.log("Status HTTP:", response.status);
+
+  const text = await response.text();
+  console.log("Resposta bruta da API:", text);
+
+  const result = JSON.parse(text);
+  console.log("JSON da API:", result);
 
   if (!result.success) {
     throw new Error(result.error || "Erro ao carregar dados");
   }
 
   dashboardData = result.data;
+  console.log("dashboardData final:", dashboardData);
 }
 
 function getProductionWidth(value, maxValue) {
@@ -90,7 +99,12 @@ function renderPerformance(items) {
 }
 
 function renderDashboard(period) {
+  console.log("Renderizando período:", period);
+  console.log("Dados disponíveis:", dashboardData);
+
   const data = dashboardData[period];
+  console.log("Data do período:", data);
+
   if (!data) return;
 
   totalProducaoEl.textContent = data.totalProducao;
@@ -126,4 +140,5 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
