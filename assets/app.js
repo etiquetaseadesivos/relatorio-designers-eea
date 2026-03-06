@@ -1,6 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbwSoIoP4t9GRB4xmSMtzJFi8V2C-3QQtqpOIZ3SFda3Y5KclFWzmwjmym1QYwC75w2K/exec";
 let dashboardData = {};
-let currentPeriod = "dia";
+let currentPeriod = "semanal";
 
 const totalProducaoEl = document.getElementById("totalProducao");
 const totalProducaoValorEl = document.getElementById("totalProducaoValor");
@@ -126,3 +126,4 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
