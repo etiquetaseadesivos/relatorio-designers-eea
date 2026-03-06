@@ -11,6 +11,7 @@ const atrasosPctEl = document.getElementById("atrasosPct");
 const tempoMedioEl = document.getElementById("tempoMedio");
 const performanceListEl = document.getElementById("performanceList");
 
+
 async function fetchDashboardData() {
   console.log("Buscando API:", API_URL);
 
@@ -140,5 +141,6 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
