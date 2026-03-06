@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório | Dashboard Designers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+  <img src="assets/logo.svg" alt="Etiquetas & Adesivos" class="brand-logo" />
+</div>
+
+      <div class="period-switch">
+        <button class="period-btn" data-period="dia">DIA</button>
+        <button class="period-btn active" data-period="semanal">SEMANAL</button>
+        <button class="period-btn" data-period="mensal">MENSAL</button>
+      </div>
+
+      <div class="report-title">
+        <h1>Relatório</h1>
+        <p>Dashboard • Designers</p>
+      </div>
+    </header>
+
+    <main class="dashboard-layout">
+      <section class="left-column">
+        <div class="panel panel-primary tall">
+          <h2>Total<br />Pedidos</h2>
+          <div class="big-number" id="totalProducao">350</div>
+        </div>
+
+        <div class="panel panel-primary medium">
+          <h2>Total<br />Produção</h2>
+          <div class="big-number secondary" id="totalProducaoValor">354,05</div>
+        </div>
+      </section>
+
+      <section class="center-column">
+        <div class="top-center-grid">
+          <div class="panel panel-error">
+  <div class="error-top">
+    <div class="panel-head small-title">ERROS</div>
+    <div class="metric-number" id="errosQtd">16</div>
+    <div class="metric-percent" id="errosPct">3.2%</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="error-bottom">
+    <ul class="legend-list">
+      <li><span class="dot c1"></span>BARRADOS</li>
+      <li><span class="dot c2"></span>ENVIADOS</li>
+      <li><span class="dot c3"></span>PROCESSO</li>
+      <li><span class="dot c4"></span>PREJUÍZO</li>
+    </ul>
+
+    <div class="pie-wrap">
+      <div class="fake-pie"></div>
+      <div class="pie-label pie-l1">28,2%</div>
+      <div class="pie-label pie-l2">22%</div>
+      <div class="pie-label pie-l3">7,8%</div>
+      <div class="pie-label pie-l4">42%</div>
+    </div>
+  </div>
+</div>
+
+          <div class="right-mini-stack">
+            <div class="panel panel-warning mini">
+              <div class="panel-head small-title yellow">ATRASOS</div>
+              <div class="metric-number smaller" id="atrasosQtd">107</div>
+              <div class="metric-percent" id="atrasosPct">26.6%</div>
+            </div>
+
+<div class="panel panel-success mini bottom-clock">
+  <div class="time-top">
+    <div class="time-label">Tempo Médio de</div>
+    <h3>Produção</h3>
+  </div>
+
+  <div class="time-middle">
+    <div class="time-number" id="tempoMedio">06:52</div>
+    <div class="time-unit">minutos</div>
+  </div>
+
+  <div class="time-bottom">
+    <div class="clock-icon real-clock">
+      <div class="clock-face">
+        <div class="hand hour"></div>
+        <div class="hand minute"></div>
+        <div class="clock-center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-column">
+        <div class="panel panel-performance">
+          <div class="performance-header">
+            <h2>Performance Operacional</h2>
+            <div class="performance-legend">
+              <span><i class="lg production"></i>Produção</span>
+              <span><i class="lg time"></i>Tempo</span>
+              <span><i class="lg errors"></i>Erros</span>
+              <span><i class="lg delays"></i>Atrasos</span>
+            </div>
+          </div>
+
+          <div class="performance-list" id="performanceList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
