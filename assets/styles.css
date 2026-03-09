@@ -371,16 +371,17 @@ body {
   flex-shrink: 0;
 }
 
-.fake-pie {
+.pie-svg {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  background: conic-gradient(
-    var(--cyan) 0 25%,
-    var(--pink) 25% 50%,
-    var(--blue) 50% 75%,
-    var(--lilac) 75% 100%
-  );
+  display: block;
+  overflow: visible;
+}
+
+.pie-slice {
+  stroke-linejoin: round;
+  stroke-linecap: butt;
+  shape-rendering: geometricPrecision;
 }
 
 .pie-label {
@@ -721,6 +722,7 @@ body {
   }
 
 }
+
 
 
 
