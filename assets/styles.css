@@ -387,7 +387,7 @@ body {
   position: absolute;
   transform: translate(-50%, -50%);
   font-weight: 800;
-  color: #454b73;
+  color: #ffffff;
   white-space: nowrap;
   pointer-events: none;
   line-height: 1;
@@ -721,4 +721,5 @@ body {
   }
 
 }
+
 
