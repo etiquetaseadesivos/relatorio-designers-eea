@@ -558,14 +558,15 @@ body {
 }
 
 .performance-list::before {
-  content: "";
-  position: absolute;
-  left: 150px;
-  top: 2px;
-  bottom: 0;
-  width: 8px;
-  background: var(--navy-light);
-  border-radius: 999px;
+    content: "";
+    position: absolute;
+    left: 145px;
+    top: 2px;
+    bottom: 0;
+    width: 15px;
+    background: #414881;
+    border-radius: 999px;
+    z-index: 999;
 }
 
 .performance-item {
@@ -732,6 +733,7 @@ body {
   opacity: 0;
   transform: translateY(8px);
 }
+
 
 
 
