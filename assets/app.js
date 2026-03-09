@@ -375,12 +375,12 @@ function renderPerformance(items) {
 
         <div class="bar-row">
           <div class="bar-track errors"></div>
-          <span class="bar-value errors">${item.erros}</span>
+          <span class="bar-value errors">${item.erros} • ${item.errosPct}</span>
         </div>
 
         <div class="bar-row">
           <div class="bar-track delays"></div>
-          <span class="bar-value delays">${item.atrasos}</span>
+          <span class="bar-value delays">${item.atrasos} • ${item.atrasosPct}</span>
         </div>
       </div>
     `;
@@ -446,6 +446,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
