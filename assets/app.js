@@ -11,7 +11,7 @@ const atrasosPctEl = document.getElementById("atrasosPct");
 const tempoMedioEl = document.getElementById("tempoMedio");
 const performanceListEl = document.getElementById("performanceList");
 
-const fakePieEl = document.getElementById("fakePie");
+const pieSvgEl = document.getElementById("pieSvg");
 const pieLabel1El = document.getElementById("pieLabel1");
 const pieLabel2El = document.getElementById("pieLabel2");
 const pieLabel3El = document.getElementById("pieLabel3");
@@ -78,8 +78,54 @@ function placePieLabel(el, startPercent, slicePercent, text) {
   el.classList.remove("is-hidden");
 }
 
+function polarToCartesian(cx, cy, r, angleDeg) {
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return {
+    x: cx + (r * Math.cos(rad)),
+    y: cy + (r * Math.sin(rad))
+  };
+}
+
+function describePieSlice(cx, cy, r, startAngle, endAngle) {
+  const start = polarToCartesian(cx, cy, r, endAngle);
+  const end = polarToCartesian(cx, cy, r, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+  return [
+    `M ${cx} ${cy}`,
+    `L ${start.x} ${start.y}`,
+    `A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`,
+    "Z"
+  ].join(" ");
+}
+
+function placePieLabelByAngle(el, midAngle, slicePercent, text) {
+  if (!el || !slicePercent || slicePercent <= 0 || !text) {
+    if (el) {
+      el.textContent = "";
+      el.classList.add("is-hidden");
+    }
+    return;
+  }
+
+  const wrap = el.parentElement;
+  const size = wrap.offsetWidth;
+  const center = size / 2;
+  const radius = size * 0.32;
+  const rad = (midAngle - 90) * Math.PI / 180;
+
+  const x = center + Math.cos(rad) * radius;
+  const y = center + Math.sin(rad) * radius;
+
+  el.textContent = text;
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+  el.style.fontSize = `${getPieFontSize(slicePercent)}px`;
+  el.classList.remove("is-hidden");
+}
+
 function renderPie(data) {
-  if (!fakePieEl) return;
+  if (!pieSvgEl) return;
 
   const barrados = parsePercentValue(data.pizzaBarrados);
   const enviados = parsePercentValue(data.pizzaEnviados);
@@ -93,24 +139,50 @@ function renderPie(data) {
   const safeProcesso = total > 0 ? (processo / total) * 100 : 25;
   const safePrejuizo = total > 0 ? (prejuizo / total) * 100 : 25;
 
-  const p1 = safeBarrados;
-  const p2 = p1 + safeEnviados;
-  const p3 = p2 + safeProcesso;
-  const p4 = p3 + safePrejuizo;
+  const slices = [
+    { percent: safeBarrados, color: "var(--cyan)", labelEl: pieLabel1El, raw: barrados },
+    { percent: safeEnviados, color: "var(--pink)", labelEl: pieLabel2El, raw: enviados },
+    { percent: safeProcesso, color: "var(--blue)", labelEl: pieLabel3El, raw: processo },
+    { percent: safePrejuizo, color: "var(--lilac)", labelEl: pieLabel4El, raw: prejuizo }
+  ];
 
-  fakePieEl.style.background = `
-    conic-gradient(
-      var(--cyan) 0% ${p1}%,
-      var(--pink) ${p1}% ${p2}%,
-      var(--blue) ${p2}% ${p3}%,
-      var(--lilac) ${p3}% ${Math.min(p4, 100)}%
-    )
-  `;
+  pieSvgEl.innerHTML = "";
 
-  placePieLabel(pieLabel1El, 0, safeBarrados, formatPercentLabel(barrados));
-  placePieLabel(pieLabel2El, p1, safeEnviados, formatPercentLabel(enviados));
-  placePieLabel(pieLabel3El, p2, safeProcesso, formatPercentLabel(processo));
-  placePieLabel(pieLabel4El, p3, safePrejuizo, formatPercentLabel(prejuizo));
+  const cx = 100;
+  const cy = 100;
+  const r = 100;
+
+  let startAngle = 0;
+
+  slices.forEach(slice => {
+    if (slice.percent <= 0) {
+      slice.labelEl.textContent = "";
+      slice.labelEl.classList.add("is-hidden");
+      return;
+    }
+
+    const angle = (slice.percent / 100) * 360;
+    const endAngle = startAngle + angle;
+    const midAngle = startAngle + (angle / 2);
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", describePieSlice(cx, cy, r, startAngle, endAngle));
+    path.setAttribute("fill", slice.color);
+    path.setAttribute("class", "pie-slice");
+    path.setAttribute("stroke", slice.color);
+    path.setAttribute("stroke-width", "1.5");
+
+    pieSvgEl.appendChild(path);
+
+    placePieLabelByAngle(
+      slice.labelEl,
+      midAngle,
+      slice.percent,
+      formatPercentLabel(slice.raw)
+    );
+
+    startAngle = endAngle;
+  });
 }
 
 
@@ -293,6 +365,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
