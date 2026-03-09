@@ -163,11 +163,57 @@ function updateClock() {
 function renderPerformance(items) {
   performanceListEl.innerHTML = "";
 
-  const maxProduction = Math.max(
-    ...items.map(item => Number(String(item.producao).replace(/\./g, "").replace(",", ".")))
-  );
+  if (!items || !items.length) return;
 
-  items.forEach(item => {
+  function parseNumber(value) {
+    const n = Number(String(value || "0").replace(/\./g, "").replace(",", "."));
+    return isFinite(n) ? n : 0;
+  }
+
+  function parseTimeToMinutes(value) {
+    const str = String(value || "").trim();
+    if (!str) return 0;
+
+    const parts = str.split(":");
+    if (parts.length !== 2) return 0;
+
+    const hoursOrMinutes = Number(parts[0]);
+    const minutes = Number(parts[1]);
+
+    if (!isFinite(hoursOrMinutes) || !isFinite(minutes)) return 0;
+
+    return (hoursOrMinutes * 60) + minutes;
+  }
+
+  const enrichedItems = items.map(item => ({
+    ...item,
+    _producaoNum: parseNumber(item.producao),
+    _tempoMin: parseTimeToMinutes(item.tempo),
+    _errosNum: parseNumber(item.erros),
+    _atrasosNum: parseNumber(item.atrasos)
+  }));
+
+  const maxProduction = Math.max(...enrichedItems.map(item => item._producaoNum), 1);
+  const maxTempo = Math.max(...enrichedItems.map(item => item._tempoMin), 1);
+  const maxErros = Math.max(...enrichedItems.map(item => item._errosNum), 1);
+  const maxAtrasos = Math.max(...enrichedItems.map(item => item._atrasosNum), 1);
+
+  enrichedItems.forEach(item => {
+    const prodScore = item._producaoNum / maxProduction;
+    const tempoScore = 1 - (item._tempoMin / maxTempo);
+    const errosScore = 1 - (item._errosNum / maxErros);
+    const atrasosScore = 1 - (item._atrasosNum / maxAtrasos);
+
+    item._score =
+      (prodScore * 0.5) +
+      (tempoScore * 0.2) +
+      (errosScore * 0.15) +
+      (atrasosScore * 0.15);
+  });
+
+  enrichedItems.sort((a, b) => b._score - a._score);
+
+  enrichedItems.forEach(item => {
     const row = document.createElement("div");
     row.className = "performance-item";
 
@@ -247,6 +293,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
