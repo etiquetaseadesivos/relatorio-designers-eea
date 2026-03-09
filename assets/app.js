@@ -26,14 +26,16 @@ function buildDataHash(data) {
   return JSON.stringify(data || {});
 }
 
-function getScaledWidth(value, maxValue, minPercent = 0) {
+function getScaledWidth(value, maxValue) {
   const number = Number(value) || 0;
   const max = maxValue || 1;
 
-  if (number <= 0 || max <= 0) return "0%";
+  if (number <= 0) return "0%";
 
   const percent = (number / max) * 100;
-  return `${Math.max(minPercent, percent)}%`;
+  const safePercent = Math.min(percent, 100);
+
+  return `${safePercent}%`;
 }
 
 function getTimeWidth(timeValue, maxTime) {
@@ -474,6 +476,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
