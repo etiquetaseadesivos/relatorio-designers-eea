@@ -10,11 +10,7 @@ const atrasosQtdEl = document.getElementById("atrasosQtd");
 const atrasosPctEl = document.getElementById("atrasosPct");
 const tempoMedioEl = document.getElementById("tempoMedio");
 const performanceListEl = document.getElementById("performanceList");
-const fakePieEl = document.getElementById("fakePie");
-const pieLabel1El = document.getElementById("pieLabel1");
-const pieLabel2El = document.getElementById("pieLabel2");
-const pieLabel3El = document.getElementById("pieLabel3");
-const pieLabel4El = document.getElementById("pieLabel4");
+
 const fakePieEl = document.getElementById("fakePie");
 const pieLabel1El = document.getElementById("pieLabel1");
 const pieLabel2El = document.getElementById("pieLabel2");
@@ -303,6 +299,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
