@@ -114,59 +114,7 @@ function renderPie(data) {
 }
 
 
-function parsePercentValue(value) {
-  if (value === null || value === undefined) return 0;
 
-  const str = String(value).trim();
-
-  if (!str) return 0;
-
-  // aceita "25%", "25,5%", "0,255", "0.255"
-  if (str.includes("%")) {
-    return Number(str.replace("%", "").replace(/\./g, "").replace(",", ".")) || 0;
-  }
-
-  const n = Number(str.replace(/\./g, "").replace(",", "."));
-  if (!isFinite(n)) return 0;
-
-  // se vier como 0,255 da planilha formatada sem %
-  if (n <= 1) return n * 100;
-
-  return n;
-}
-
-function formatPercentLabel(value) {
-  const rounded = Math.round(value * 10) / 10;
-  return `${String(rounded).replace(".", ",")}%`;
-}
-
-function renderPie(data) {
-  if (!fakePieEl) return;
-
-  const barrados = parsePercentValue(data.pizzaBarrados);
-  const enviados = parsePercentValue(data.pizzaEnviados);
-  const processo = parsePercentValue(data.pizzaProcesso);
-  const prejuizo = parsePercentValue(data.pizzaPrejuizo);
-
-  const p1 = barrados;
-  const p2 = p1 + enviados;
-  const p3 = p2 + processo;
-  const p4 = p3 + prejuizo;
-
-  fakePieEl.style.background = `
-    conic-gradient(
-      var(--cyan) 0% ${p1}%,
-      var(--pink) ${p1}% ${p2}%,
-      var(--blue) ${p2}% ${p3}%,
-      var(--lilac) ${p3}% ${Math.min(p4, 100)}%
-    )
-  `;
-
-  pieLabel1El.textContent = formatPercentLabel(barrados);
-  pieLabel2El.textContent = formatPercentLabel(enviados);
-  pieLabel3El.textContent = formatPercentLabel(processo);
-  pieLabel4El.textContent = formatPercentLabel(prejuizo);
-}
 
 
 async function fetchDashboardData() {
@@ -299,6 +247,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
