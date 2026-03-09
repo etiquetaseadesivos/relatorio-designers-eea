@@ -16,6 +16,27 @@ const pieLabel1El = document.getElementById("pieLabel1");
 const pieLabel2El = document.getElementById("pieLabel2");
 const pieLabel3El = document.getElementById("pieLabel3");
 const pieLabel4El = document.getElementById("pieLabel4");
+const dashboardLayoutEl = document.querySelector(".dashboard-layout");
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function animatePeriodChange(period) {
+  if (!dashboardLayoutEl) {
+    renderDashboard(period);
+    return;
+  }
+
+  dashboardLayoutEl.classList.add("is-switching");
+  await wait(180);
+
+  renderDashboard(period);
+
+  requestAnimationFrame(() => {
+    dashboardLayoutEl.classList.remove("is-switching");
+  });
+}
 
 function parsePercentValue(value) {
   if (value === null || value === undefined) return 0;
@@ -353,18 +374,21 @@ async function initDashboard() {
 }
 
 document.querySelectorAll(".period-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", async () => {
+    if (btn.dataset.period === currentPeriod) return;
+
     document.querySelectorAll(".period-btn").forEach(item => item.classList.remove("active"));
     btn.classList.add("active");
 
     currentPeriod = btn.dataset.period;
-    renderDashboard(currentPeriod);
+    await animatePeriodChange(currentPeriod);
   });
 });
 
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
