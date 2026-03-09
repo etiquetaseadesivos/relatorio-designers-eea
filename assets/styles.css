@@ -14,10 +14,10 @@
   --success: #56a297;
   --success-soft: #96ddd1;
 
-  --cyan: #7ce5eb;
-  --pink: #f5a7ea;
-  --blue: #7ec6f5;
-  --lilac: #cfa5ff;
+  --cyan: #ff4b4b;
+  --pink: #fe6bff;
+  --blue: #5257ff;
+  --lilac: #ff8b00;
 
   --border-soft: #c8c8c8;
   --shadow-soft: 0 8px 20px rgba(61, 61, 61, 0.08);
@@ -721,3 +721,4 @@ body {
   }
 
 }
+
