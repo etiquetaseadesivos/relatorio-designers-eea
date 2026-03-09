@@ -724,5 +724,15 @@ body {
 }
 
 
+.dashboard-layout {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.dashboard-layout.is-switching {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+
 
 
