@@ -627,7 +627,7 @@ body {
 .bar-value {
   font-size: 16px;
   font-weight: 800;
-  min-width: 74px;
+  min-width: 100px;
   margin-left: 7px;
 }
 
@@ -737,6 +737,7 @@ body {
   opacity: 0;
   transform: translateY(8px);
 }
+
 
 
 
