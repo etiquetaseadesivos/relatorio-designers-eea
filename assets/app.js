@@ -26,10 +26,14 @@ function buildDataHash(data) {
   return JSON.stringify(data || {});
 }
 
-function getScaledWidth(value, maxValue, minPercent = 18) {
+function getScaledWidth(value, maxValue, minPercent = 0) {
   const number = Number(value) || 0;
   const max = maxValue || 1;
-  return `${Math.max(minPercent, (number / max) * 100)}%`;
+
+  if (number <= 0 || max <= 0) return "0%";
+
+  const percent = (number / max) * 100;
+  return `${Math.max(minPercent, percent)}%`;
 }
 
 function getTimeWidth(timeValue, maxTime) {
@@ -388,22 +392,22 @@ function renderPerformance(items) {
 
       <div class="bars">
         <div class="bar-row">
-          <div class="bar-track production" style="width:${getScaledWidth(item._producaoNum, maxProduction, 20)};"></div>
+          <div class="bar-track production" style="width:${getScaledWidth(item._producaoNum, maxProduction, 0)};"></div>
           <span class="bar-value production">${item.producao}</span>
         </div>
 
         <div class="bar-row">
-          <div class="bar-track time" style="width:${getScaledWidth(item._tempoMin, maxTempo, 20)};"></div>
+          <div class="bar-track time" style="width:${getScaledWidth(item._tempoMin, maxTempo, 0)};"></div>
           <span class="bar-value time">${item.tempo}</span>
         </div>
 
         <div class="bar-row">
-          <div class="bar-track errors" style="width:${getScaledWidth(item._errosNum, maxErros, 20)};"></div>
+          <div class="bar-track errors" style="width:${getScaledWidth(item._errosNum, maxErros, 0)};"></div>
           <span class="bar-value errors">${item.erros} • ${item.errosPct}</span>
         </div>
 
         <div class="bar-row">
-          <div class="bar-track delays" style="width:${getScaledWidth(item._atrasosNum, maxAtrasos, 20)};"></div>
+          <div class="bar-track delays" style="width:${getScaledWidth(item._atrasosNum, maxAtrasos, 0)};"></div>
           <span class="bar-value delays">${item.atrasos} • ${item.atrasosPct}</span>
         </div>
       </div>
@@ -470,6 +474,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
