@@ -2,6 +2,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxEi-616cs54p1XDjL9mQrK
 let dashboardData = {};
 let currentPeriod = "semanal";
 
+const AUTO_REFRESH_MS = 10000;
+
 const totalProducaoEl = document.getElementById("totalProducao");
 const totalProducaoValorEl = document.getElementById("totalProducaoValor");
 const errosQtdEl = document.getElementById("errosQtd");
@@ -17,6 +19,48 @@ const pieLabel2El = document.getElementById("pieLabel2");
 const pieLabel3El = document.getElementById("pieLabel3");
 const pieLabel4El = document.getElementById("pieLabel4");
 const dashboardLayoutEl = document.querySelector(".dashboard-layout");
+
+let autoRefreshTimer = null;
+let lastDataHash = "";
+const AUTO_REFRESH_MS = 15000; // 15 segundos
+
+function buildDataHash(data) {
+  return JSON.stringify(data || {});
+}
+
+async function refreshDashboardDataSilently() {
+  try {
+    const response = await fetch(`${API_URL}?t=${Date.now()}`, {
+      cache: "no-store"
+    });
+
+    const result = await response.json();
+
+    if (!result.success) return;
+
+    const newHash = buildDataHash(result.data);
+
+    if (newHash !== lastDataHash) {
+      dashboardData = result.data;
+      lastDataHash = newHash;
+      renderDashboard(currentPeriod);
+    }
+  } catch (error) {
+    console.error("Erro no auto refresh:", error);
+  }
+}
+
+function startAutoRefresh() {
+  stopAutoRefresh();
+  autoRefreshTimer = setInterval(refreshDashboardDataSilently, AUTO_REFRESH_MS);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
+}
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -213,7 +257,7 @@ function renderPie(data) {
 async function fetchDashboardData() {
   console.log("Buscando API:", API_URL);
 
-  const response = await fetch(API_URL, { cache: "no-store" });
+  const response = await fetch(`${API_URL}?t=${Date.now()}`, { cache: "no-store" });
   console.log("Status HTTP:", response.status);
 
   const text = await response.text();
@@ -227,6 +271,8 @@ async function fetchDashboardData() {
   }
 
   dashboardData = result.data;
+  lastDataHash = buildDataHash(result.data);
+
   console.log("dashboardData final:", dashboardData);
 }
 
@@ -368,10 +414,20 @@ async function initDashboard() {
   try {
     await fetchDashboardData();
     renderDashboard(currentPeriod);
+    startAutoRefresh();
   } catch (error) {
     console.error("Erro ao carregar dashboard:", error);
   }
 }
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stopAutoRefresh();
+  } else {
+    refreshDashboardDataSilently();
+    startAutoRefresh();
+  }
+});
 
 document.querySelectorAll(".period-btn").forEach(btn => {
   btn.addEventListener("click", async () => {
@@ -390,6 +446,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
