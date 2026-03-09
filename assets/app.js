@@ -385,9 +385,12 @@ document.querySelectorAll(".period-btn").forEach(btn => {
   });
 });
 
+
+
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
