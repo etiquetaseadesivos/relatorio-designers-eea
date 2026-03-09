@@ -613,7 +613,7 @@ body {
   height: 16px;
   border-radius: 999px;
   position: relative;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .bar-track.production { background: #8cb0ff; }
@@ -733,6 +733,7 @@ body {
   opacity: 0;
   transform: translateY(8px);
 }
+
 
 
 
