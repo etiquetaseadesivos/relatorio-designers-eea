@@ -600,7 +600,7 @@ body {
 
 .bars {
   flex: 1;
-  max-width: 520px;
+  max-width: 450px;
   width: 100%;
 }
 
@@ -737,6 +737,7 @@ body {
   opacity: 0;
   transform: translateY(8px);
 }
+
 
 
 
