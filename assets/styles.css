@@ -617,9 +617,9 @@ body {
 }
 
 .bar-track.production { background: #8cb0ff; }
-.bar-track.time { background: #94d7cc; max-width: 120px; }
-.bar-track.errors { background: #d86262; max-width: 80px; }
-.bar-track.delays { background: #ecb34c; max-width: 95px; }
+.bar-track.time { background: #94d7cc; }
+.bar-track.errors { background: #d86262; }
+.bar-track.delays { background: #ecb34c; }
 
 .bar-value {
   font-size: 16px;
@@ -733,6 +733,7 @@ body {
   opacity: 0;
   transform: translateY(8px);
 }
+
 
 
 
