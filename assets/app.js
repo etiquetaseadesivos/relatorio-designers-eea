@@ -26,6 +26,32 @@ function buildDataHash(data) {
   return JSON.stringify(data || {});
 }
 
+function getScaledWidth(value, maxValue, minPercent = 18) {
+  const number = Number(value) || 0;
+  const max = maxValue || 1;
+  return `${Math.max(minPercent, (number / max) * 100)}%`;
+}
+
+function getTimeWidth(timeValue, maxTime) {
+  const minutes = parseTimeToMinutesGlobal(timeValue);
+  return getScaledWidth(minutes, maxTime, 18);
+}
+
+function parseTimeToMinutesGlobal(value) {
+  const str = String(value || "").trim();
+  if (!str) return 0;
+
+  const parts = str.split(":");
+  if (parts.length !== 2) return 0;
+
+  const a = Number(parts[0]);
+  const b = Number(parts[1]);
+
+  if (!isFinite(a) || !isFinite(b)) return 0;
+
+  return (a * 60) + b;
+}
+
 async function refreshDashboardDataSilently() {
   try {
     const response = await fetch(`${API_URL}?t=${Date.now()}`, {
@@ -362,22 +388,22 @@ function renderPerformance(items) {
 
       <div class="bars">
         <div class="bar-row">
-          <div class="bar-track production" style="width:${getProductionWidth(item.producao, maxProduction)};"></div>
+          <div class="bar-track production" style="width:${getScaledWidth(item._producaoNum, maxProduction, 20)};"></div>
           <span class="bar-value production">${item.producao}</span>
         </div>
 
         <div class="bar-row">
-          <div class="bar-track time"></div>
+          <div class="bar-track time" style="width:${getScaledWidth(item._tempoMin, maxTempo, 20)};"></div>
           <span class="bar-value time">${item.tempo}</span>
         </div>
 
         <div class="bar-row">
-          <div class="bar-track errors"></div>
+          <div class="bar-track errors" style="width:${getScaledWidth(item._errosNum, maxErros, 20)};"></div>
           <span class="bar-value errors">${item.erros} • ${item.errosPct}</span>
         </div>
 
         <div class="bar-row">
-          <div class="bar-track delays"></div>
+          <div class="bar-track delays" style="width:${getScaledWidth(item._atrasosNum, maxAtrasos, 20)};"></div>
           <span class="bar-value delays">${item.atrasos} • ${item.atrasosPct}</span>
         </div>
       </div>
@@ -444,6 +470,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
