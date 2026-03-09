@@ -625,6 +625,7 @@ body {
   font-size: 16px;
   font-weight: 800;
   min-width: 74px;
+  margin-left: 7px;
 }
 
 .bar-value.production { color: #8cb0ff; }
@@ -733,6 +734,7 @@ body {
   opacity: 0;
   transform: translateY(8px);
 }
+
 
 
 
