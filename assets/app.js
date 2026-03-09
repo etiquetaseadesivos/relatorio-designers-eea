@@ -177,6 +177,7 @@ function renderDashboard(period) {
   tempoMedioEl.textContent = data.tempoMedio;
 
   renderPerformance(data.performance || []);
+  renderPie(data);
 }
 
 async function initDashboard() {
@@ -201,6 +202,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
