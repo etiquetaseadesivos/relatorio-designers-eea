@@ -2,8 +2,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxEi-616cs54p1XDjL9mQrK
 let dashboardData = {};
 let currentPeriod = "semanal";
 
-const AUTO_REFRESH_MS = 10000;
-
 const totalProducaoEl = document.getElementById("totalProducao");
 const totalProducaoValorEl = document.getElementById("totalProducaoValor");
 const errosQtdEl = document.getElementById("errosQtd");
@@ -283,8 +281,8 @@ function getProductionWidth(value, maxValue) {
 }
 
 function updateClock() {
-  const hourHand = document.getElementById("hourHand");
-  const minuteHand = document.getElementById("minuteHand");
+  const hourHand = document.querySelector(".hand.hour");
+  const minuteHand = document.querySelector(".hand.minute");
 
   if (!hourHand || !minuteHand) return;
 
@@ -295,8 +293,8 @@ function updateClock() {
   const hourDeg = (hours * 30) + (minutes * 0.5);
   const minuteDeg = minutes * 6;
 
-  hourHand.style.transform = `rotate(${hourDeg}deg)`;
-  minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+  hourHand.style.transform = `translateX(0) rotate(${hourDeg}deg)`;
+  minuteHand.style.transform = `translateX(0) rotate(${minuteDeg}deg)`;
 }
 
 function renderPerformance(items) {
@@ -446,6 +444,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
