@@ -15,6 +15,107 @@ const pieLabel1El = document.getElementById("pieLabel1");
 const pieLabel2El = document.getElementById("pieLabel2");
 const pieLabel3El = document.getElementById("pieLabel3");
 const pieLabel4El = document.getElementById("pieLabel4");
+const fakePieEl = document.getElementById("fakePie");
+const pieLabel1El = document.getElementById("pieLabel1");
+const pieLabel2El = document.getElementById("pieLabel2");
+const pieLabel3El = document.getElementById("pieLabel3");
+const pieLabel4El = document.getElementById("pieLabel4");
+
+function parsePercentValue(value) {
+  if (value === null || value === undefined) return 0;
+
+  const str = String(value).trim();
+  if (!str) return 0;
+
+  if (str.includes("%")) {
+    return Number(str.replace("%", "").replace(/\./g, "").replace(",", ".")) || 0;
+  }
+
+  const n = Number(str.replace(/\./g, "").replace(",", "."));
+  if (!isFinite(n)) return 0;
+
+  return n <= 1 ? n * 100 : n;
+}
+
+function formatPercentLabel(value) {
+  const rounded = Math.round(value * 10) / 10;
+  if (rounded === 0) return "";
+  return `${String(rounded).replace(".", ",")}%`;
+}
+
+function getPieFontSize(percent) {
+  if (percent >= 35) return 22;
+  if (percent >= 20) return 18;
+  if (percent >= 10) return 16;
+  if (percent >= 5) return 14;
+  return 13;
+}
+
+function placePieLabel(el, startPercent, slicePercent, text) {
+  if (!el) return;
+
+  if (!slicePercent || slicePercent <= 0) {
+    el.textContent = "";
+    el.classList.add("is-hidden");
+    return;
+  }
+
+  const wrap = el.parentElement;
+  const size = wrap.offsetWidth;
+  const center = size / 2;
+
+  // ângulo central da fatia
+  const midPercent = startPercent + (slicePercent / 2);
+  const angleDeg = (midPercent / 100) * 360 - 90;
+  const angleRad = angleDeg * Math.PI / 180;
+
+  // distância do centro
+  const radius = size * 0.32;
+
+  const x = center + Math.cos(angleRad) * radius;
+  const y = center + Math.sin(angleRad) * radius;
+
+  el.textContent = text;
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+  el.style.fontSize = `${getPieFontSize(slicePercent)}px`;
+  el.classList.remove("is-hidden");
+}
+
+function renderPie(data) {
+  if (!fakePieEl) return;
+
+  const barrados = parsePercentValue(data.pizzaBarrados);
+  const enviados = parsePercentValue(data.pizzaEnviados);
+  const processo = parsePercentValue(data.pizzaProcesso);
+  const prejuizo = parsePercentValue(data.pizzaPrejuizo);
+
+  const total = barrados + enviados + processo + prejuizo;
+
+  const safeBarrados = total > 0 ? (barrados / total) * 100 : 25;
+  const safeEnviados = total > 0 ? (enviados / total) * 100 : 25;
+  const safeProcesso = total > 0 ? (processo / total) * 100 : 25;
+  const safePrejuizo = total > 0 ? (prejuizo / total) * 100 : 25;
+
+  const p1 = safeBarrados;
+  const p2 = p1 + safeEnviados;
+  const p3 = p2 + safeProcesso;
+  const p4 = p3 + safePrejuizo;
+
+  fakePieEl.style.background = `
+    conic-gradient(
+      var(--cyan) 0% ${p1}%,
+      var(--pink) ${p1}% ${p2}%,
+      var(--blue) ${p2}% ${p3}%,
+      var(--lilac) ${p3}% ${Math.min(p4, 100)}%
+    )
+  `;
+
+  placePieLabel(pieLabel1El, 0, safeBarrados, formatPercentLabel(barrados));
+  placePieLabel(pieLabel2El, p1, safeEnviados, formatPercentLabel(enviados));
+  placePieLabel(pieLabel3El, p2, safeProcesso, formatPercentLabel(processo));
+  placePieLabel(pieLabel4El, p3, safePrejuizo, formatPercentLabel(prejuizo));
+}
 
 
 function parsePercentValue(value) {
@@ -202,6 +303,7 @@ document.querySelectorAll(".period-btn").forEach(btn => {
 setInterval(updateClock, 1000);
 updateClock();
 initDashboard();
+
 
 
 
